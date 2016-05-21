@@ -47,6 +47,8 @@ public class Game {
         if (state.getObstacle().isAlive())
         {
             state.getObstacle().update(dt);
+            approachTest();
+            hitTest();
         }
         else
         {
@@ -79,12 +81,12 @@ public class Game {
 
     private boolean hitTest()
     {
-        return false;
+        return state.getPiece().hitTest(state.getObstacle());
     }
 
     private boolean approachTest()
     {
-        return false;
+        return state.getPiece().approachTest(state.getObstacle());
     }
 
     public long getScore() {

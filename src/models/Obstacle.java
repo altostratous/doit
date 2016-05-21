@@ -140,4 +140,8 @@ public class Obstacle implements Drawable {
     public boolean isAlive() throws XPathExpressionException {
         return polygon.getBounds().getY() < configuration.getInteger("config/settings/window/size/height");
     }
+
+    public Polygon getPolygon() {
+        return polygon;
+    }
 }
