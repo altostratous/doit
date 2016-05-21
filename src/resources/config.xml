@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+    <settings>
+        <window>
+            <size>
+                <width>480</width>
+                <height>640</height>
+            </size>
+            <title>DoIt</title>
+        </window>
+        <firstpage>
+            <rows>1</rows>
+            <cols>1</cols>
+        </firstpage>
+    </settings>
+    <game>
+        <piece>
+            <radius>100</radius>
+            <x>140</x>
+            <y>380</y>
+            <subradius>15</subradius>
+            <speed>0.05</speed>
+        </piece>
+        <obstacle>
+            <angularvelocity>0.005</angularvelocity>
+            <height>30</height>
+            <width>200</width>
+            <lesscoefficient>0.9</lesscoefficient>
+            <morecoefficient>1.05</morecoefficient>
+            <speed>0.2</speed>
+        </obstacle>
+    </game>
+</config>
