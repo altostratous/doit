@@ -1,5 +1,6 @@
 package controllers;
 
+import models.ObstacleType;
 import models.State;
 
 import javax.swing.*;
@@ -18,7 +19,6 @@ public class Game {
 
     public Game(State state, Configuration configuration) {
         this.state = state;
-        this.gamePage = gamePage;
         this.configuration = configuration;
         state.addTime(System.currentTimeMillis() - state.getTime());
         timer = new Timer(15, new ActionListener() {
@@ -31,6 +31,7 @@ public class Game {
 
     public void onGameOver(State state)
     {
+        timer.stop();
     }
 
     public void start() {
@@ -47,8 +48,17 @@ public class Game {
         if (state.getObstacle().isAlive())
         {
             state.getObstacle().update(dt);
-            approachTest();
-            hitTest();
+            if (approachTest())
+            {
+                if (state.getObstacle().getType() == ObstacleType.BLINKING_SIDE_ABSTACLE)
+                {
+                    state.getObstacle().changeSide();
+                }
+            }
+            if (hitTest())
+            {
+                onGameOver(state);
+            }
         }
         else
         {

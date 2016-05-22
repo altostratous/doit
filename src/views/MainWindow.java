@@ -78,7 +78,7 @@ public class MainWindow extends JFrame{
             @Override
             public void onGameOver(State state) {
                 super.onGameOver(state);
-                // TODO: 5/19/2016 Handle game over
+                showPage(firstPage);
             }
         };
         gamePage = new GamePage(configuration, game)

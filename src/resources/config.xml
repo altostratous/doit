@@ -22,6 +22,7 @@
             <speed>0.05</speed>
         </piece>
         <obstacle>
+            <changesidelimit>500</changesidelimit>
             <angularvelocity>0.005</angularvelocity>
             <height>30</height>
             <width>200</width>

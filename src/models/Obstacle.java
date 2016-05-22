@@ -18,6 +18,7 @@ public class Obstacle implements Drawable {
     double angularVelocity;
     Configuration configuration;
     State state;
+    long lastChangeSide = 0;
     public Obstacle(Configuration configuration, State state) throws XPathExpressionException {
         obstacleType = randomType();
         this.state = state;
@@ -143,5 +144,18 @@ public class Obstacle implements Drawable {
 
     public Polygon getPolygon() {
         return polygon;
+    }
+
+    public ObstacleType getType() {
+        return obstacleType;
+    }
+
+    public void changeSide() throws XPathExpressionException {
+        if (System.currentTimeMillis() - lastChangeSide > configuration.getInteger("config/game/obstacle/changesidelimit")) {
+            for (int i = 0; i < polygon.npoints; i++) {
+                polygon.xpoints[i] = configuration.getInteger("config/settings/window/size/width") - polygon.xpoints[i];
+            }
+            lastChangeSide = System.currentTimeMillis();
+        }
     }
 }
