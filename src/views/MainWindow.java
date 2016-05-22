@@ -17,6 +17,7 @@ import java.io.IOException;
 public class MainWindow extends JFrame{
     JPanel firstPage;
     JPanel gamePage;
+    JPanel scorePage;
     Configuration configuration;
     Game game;
     SoundClip soundClip;
@@ -68,6 +69,9 @@ public class MainWindow extends JFrame{
         if (page != gamePage )
             if (gamePage != null)
                 gamePage.setVisible(false);
+        if (page != scorePage )
+            if (scorePage != null)
+                scorePage.setVisible(false);
         add(page);
         page.setVisible(true);
         page.requestFocus();
@@ -78,7 +82,7 @@ public class MainWindow extends JFrame{
             @Override
             public void onGameOver(State state) {
                 super.onGameOver(state);
-                showPage(firstPage);
+                showPage(scorePage);
             }
         };
         gamePage = new GamePage(configuration, game)
@@ -88,5 +92,32 @@ public class MainWindow extends JFrame{
         game.setPage(gamePage);
         showPage(gamePage);
         game.start();
+
+        scorePage = new ScorePage(configuration, game, this){
+            // override events here
+            @Override
+            public void onStart() throws XPathExpressionException {
+                super.onStart();
+                MainWindow.this.onStart();
+            }
+
+            @Override
+            public void onSoundOn(){
+                super.onSoundOn();
+                try {
+                    soundClip = new SoundClip(getClass().getResource("/resources/music.wav"));
+                } catch (Exception e)
+                {
+                    ErrorWindow.viewError(e, "Audio file error");
+                }
+                soundClip.play();
+            }
+
+            @Override
+            public void onSoundOff() {
+                super.onSoundOff();
+                soundClip.stop();
+            }
+        };
     }
 }

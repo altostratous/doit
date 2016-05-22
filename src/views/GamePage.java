@@ -14,6 +14,9 @@ import javafx.scene.shape.Shape;
 import javax.swing.*;
 import javax.xml.xpath.XPathExpressionException;
 import java.awt.*;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -24,8 +27,8 @@ import java.util.Date;
  */
 public class GamePage extends JPanel {
     private Configuration configuration;
-    private Timer timer;
     private Game game;
+    private JButton pause;
     public GamePage(Configuration configuration, Game game) throws XPathExpressionException {
         this.game = game;
         setFocusable(true);
@@ -54,7 +57,24 @@ public class GamePage extends JPanel {
                                         game.stopTurningRight();
                                 }
                             });
-                // TODO: 5/19/2016 add abstacles
+        pause = new JButton("Pause");
+        pause.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (pause.getText().equals("Pause"))
+                {
+                    game.pause();
+                    pause.setText("Resume");
+                }
+                else
+                {
+                    game.resume();
+                    GamePage.this.requestFocus();
+                    pause.setText("Pause");
+                }
+            }
+        });
+        add(pause);
     }
     @Override
     public void paint(Graphics graphics)
@@ -63,12 +83,14 @@ public class GamePage extends JPanel {
         Graphics2D graphics2D = (Graphics2D) graphics;
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         try {
-            graphics2D.clearRect(0, 0, configuration.getInteger("/config/settings/window/size/width"),
+            graphics2D.setColor(Color.BLACK);
+            graphics2D.fillRect(0, 0, configuration.getInteger("/config/settings/window/size/width"),
                     configuration.getInteger("/config/settings/window/size/height"));
             game.update().draw(graphics2D);
         } catch (XPathExpressionException e) {
             (new ErrorWindow(e, "Error reading xml")).setVisible(true);
         }
         graphics2D.drawString("Score: " + game.getScore(), 10, 20);
+        paintComponents(graphics);
     }
 }

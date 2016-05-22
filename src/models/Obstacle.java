@@ -93,7 +93,7 @@ public class Obstacle implements Drawable {
 
     @Override
     public void draw(Graphics2D graphics2D, Point location) {
-        graphics2D.setColor(Color.RED);
+        graphics2D.setColor(Color.WHITE);
         graphics2D.fillPolygon(polygon);
     }
 

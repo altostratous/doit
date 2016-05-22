@@ -12,6 +12,8 @@ import java.awt.*;
 public class State implements Drawable{
     Obstacle obstacle;
     Piece piece;
+    private long score;
+
     public int getAngularVelocity() {
         return angularVelocity;
     }
@@ -30,6 +32,7 @@ public class State implements Drawable{
     public void addTime(long dt)
     {
         time+= dt;
+        score+= dt;
     }
 
     long time;
@@ -37,6 +40,7 @@ public class State implements Drawable{
     Configuration configuration;
     public State(Configuration configuration) throws XPathExpressionException {
         this.configuration = configuration;
+        this.score = 0;
         piece = new Piece(configuration);
         obstacle = new Obstacle(configuration, this);
         speedCoefficient = 1;
@@ -71,6 +75,10 @@ public class State implements Drawable{
     }
 
     public long getScore() {
-        return time - initTime;
+        return score;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 }

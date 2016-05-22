@@ -20,7 +20,7 @@ public class Game {
     public Game(State state, Configuration configuration) {
         this.state = state;
         this.configuration = configuration;
-        state.addTime(System.currentTimeMillis() - state.getTime());
+        state.setTime(System.currentTimeMillis());
         timer = new Timer(15, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -105,5 +105,14 @@ public class Game {
 
     public void setPage(JPanel page) {
         this.gamePage = page;
+    }
+
+    public Timer getTimer() {
+        return timer;
+    }
+
+    public void resume() {
+        state.setTime(System.currentTimeMillis());
+        timer.start();
     }
 }
