@@ -29,7 +29,9 @@ public class GamePage extends JPanel {
     private Configuration configuration;
     private Game game;
     private JButton pause;
-    public GamePage(Configuration configuration, Game game) throws XPathExpressionException {
+    private MainWindow mainWindow;
+    public GamePage(Configuration configuration, Game game, MainWindow mainWindow) throws XPathExpressionException {
+        this.mainWindow = mainWindow;
         this.game = game;
         setFocusable(true);
         this.configuration = configuration;
@@ -106,6 +108,7 @@ public class GamePage extends JPanel {
             public void onSound()
             {
                 super.onSound();
+                mainWindow.toggleSound();
             }
             public void onBack()
             {

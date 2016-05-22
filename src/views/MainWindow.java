@@ -17,11 +17,11 @@ import java.io.IOException;
 public class MainWindow extends JFrame{
     JPanel firstPage;
     JPanel gamePage;
-    JPanel scorePage;
+    ScorePage scorePage;
     Configuration configuration;
     Game game;
     SoundClip soundClip;
-
+    boolean sound = true;
     public MainWindow(Configuration configuration) throws XPathExpressionException, UnsupportedAudioFileException, IOException, LineUnavailableException {
         this.configuration = configuration;
         soundClip = new SoundClip(MainWindow.class.getResource("/resources/music.wav"));
@@ -41,19 +41,13 @@ public class MainWindow extends JFrame{
             @Override
             public void onSoundOn(){
                 super.onSoundOn();
-                try {
-                    soundClip = new SoundClip(getClass().getResource("/resources/music.wav"));
-                } catch (Exception e)
-                {
-                    ErrorWindow.viewError(e, "Audio file error");
-                }
-                soundClip.play();
+                toggleSound();
             }
 
             @Override
             public void onSoundOff() {
                 super.onSoundOff();
-                soundClip.stop();
+                toggleSound();
             }
         };
 
@@ -61,6 +55,22 @@ public class MainWindow extends JFrame{
 
     }
 
+    public void toggleSound()
+    {
+        if (!sound) {
+            try {
+                soundClip = new SoundClip(getClass().getResource("/resources/music.wav"));
+            } catch (Exception e) {
+                ErrorWindow.viewError(e, "Audio file error");
+            }
+            soundClip.play();
+            sound = true;
+        }
+        else {
+            soundClip.stop();
+            sound = false;
+        }
+    }
     private void showPage(JPanel page)
     {
         if(page != firstPage)
@@ -78,14 +88,20 @@ public class MainWindow extends JFrame{
     }
     private void onStart() throws XPathExpressionException {
         State state = new State(configuration);
-        Game game = new Game(state, configuration){
+        game = new Game(state, configuration){
             @Override
             public void onGameOver(State state) {
                 super.onGameOver(state);
-                showPage(scorePage);
+                try {
+                    MainWindow.this.onGameOver();
+                }
+                catch (Exception ex)
+                {
+                    ErrorWindow.viewError(ex);
+                }
             }
         };
-        gamePage = new GamePage(configuration, game)
+        gamePage = new GamePage(configuration, game, this)
         {
             // override actions here
         };
@@ -93,31 +109,41 @@ public class MainWindow extends JFrame{
         showPage(gamePage);
         game.start();
 
-        scorePage = new ScorePage(configuration, game, this){
-            // override events here
-            @Override
-            public void onStart() throws XPathExpressionException {
-                super.onStart();
-                MainWindow.this.onStart();
-            }
 
-            @Override
-            public void onSoundOn(){
-                super.onSoundOn();
-                try {
-                    soundClip = new SoundClip(getClass().getResource("/resources/music.wav"));
-                } catch (Exception e)
-                {
-                    ErrorWindow.viewError(e, "Audio file error");
+    }
+
+    private void onGameOver() throws XPathExpressionException {
+        if (scorePage == null) {
+            scorePage = new ScorePage(configuration, game, this) {
+                // override events here
+                @Override
+                public void onStart() throws XPathExpressionException {
+                    super.onStart();
+                    MainWindow.this.onStart();
                 }
-                soundClip.play();
-            }
 
-            @Override
-            public void onSoundOff() {
-                super.onSoundOff();
-                soundClip.stop();
-            }
-        };
+                @Override
+                public void onSoundOn() {
+                    super.onSoundOn();
+                    try {
+                        soundClip = new SoundClip(getClass().getResource("/resources/music.wav"));
+                    } catch (Exception e) {
+                        ErrorWindow.viewError(e, "Audio file error");
+                    }
+                    soundClip.play();
+                }
+
+                @Override
+                public void onSoundOff() {
+                    super.onSoundOff();
+                    soundClip.stop();
+                }
+            };
+        }
+        else
+        {
+            scorePage.update(game);
+        }
+        showPage(scorePage);
     }
 }
