@@ -2,6 +2,7 @@ package views;
 
 import controllers.Configuration;
 import controllers.Game;
+import controllers.SoundClip;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;
@@ -43,12 +44,19 @@ public class GamePage extends JPanel {
 
                                 @Override
                                 public void keyPressed(KeyEvent e) {
-                                    if (e.getKeyCode() == KeyEvent.VK_LEFT)
-                                        game.turnLeft();
+                                    try {
+                                        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                                            game.turnLeft();
 
-                                    if (e.getKeyCode() == KeyEvent.VK_RIGHT)
-                                        game.turnRight();
+                                        }
 
+                                        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                                            game.turnRight();
+                                        }
+                                    }catch (Exception ex)
+                                    {
+                                        ErrorWindow.viewError(ex);
+                                    }
                                     if (e.getKeyCode() == KeyEvent.VK_SPACE)
                                     {
 //                                        if (pause.getText().equals("Pause"))
@@ -130,8 +138,8 @@ public class GamePage extends JPanel {
             graphics2D.fillRect(0, 0, configuration.getInteger("/config/settings/window/size/width"),
                     configuration.getInteger("/config/settings/window/size/height"));
             game.update().draw(graphics2D);
-        } catch (XPathExpressionException e) {
-            (new ErrorWindow(e, "Error reading xml")).setVisible(true);
+        } catch (Exception e) {
+            ErrorWindow.viewError(e);
         }
         graphics2D.drawString("Score: " + game.getScore(), 10, 20);
         paintComponents(graphics);

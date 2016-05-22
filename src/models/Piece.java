@@ -24,7 +24,7 @@ public class Piece implements Drawable{
     @Override
     public void draw(Graphics2D graphics2D, Point location) {
         graphics2D.setColor(paint);
-        graphics2D.drawOval((int)x + 1, (int)y + 1, (int)radius * 2 - 2, (int)radius * 2- 2);
+//        graphics2D.drawOval((int)x + 1, (int)y + 1, (int)radius * 2 - 2, (int)radius * 2- 2);
         graphics2D.drawOval((int)x, (int)y, (int)radius * 2, (int)radius * 2);
 //        graphics2D.drawOval((int)x - 1, (int)y - 1, (int)radius * 2  + 2, (int)radius * 2+2);
         graphics2D.setColor(Color.BLUE);

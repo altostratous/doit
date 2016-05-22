@@ -1,12 +1,16 @@
 package models;
 
 import controllers.Configuration;
+import controllers.SoundClip;
 import views.Drawable;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.xml.xpath.XPathExpressionException;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.io.IOException;
 import java.util.Random;
 
 /**
@@ -40,7 +44,7 @@ public class Obstacle implements Drawable {
                             (int) - rectangle.getHeight());
                 break;
             case POSITION_ABSTACLE:
-                rectangle = new Rectangle((int) (configuration.getInteger("config/game/piece/radius") * 2 *
+                rectangle = new Rectangle((int) ((configuration.getInteger("config/game/piece/radius") - configuration.getInteger("config/game/piece/subradius")) * 2 *
                     configuration.getDouble("config/game/obstacle/lesscoefficient")), configuration.getInteger("config/game/obstacle/height"));
 
                 int left = random.nextInt(configuration.getInteger("config/settings/window/size/width") - configuration.getInteger("config/game/obstacle/width"));
@@ -95,6 +99,10 @@ public class Obstacle implements Drawable {
     public void draw(Graphics2D graphics2D, Point location) {
         graphics2D.setColor(Color.WHITE);
         graphics2D.fillPolygon(polygon);
+        if (obstacleType == ObstacleType.BLINKING_SIDE_ABSTACLE) {
+            graphics2D.setColor(Color.RED);
+            graphics2D.drawPolygon(polygon);
+        }
     }
 
     @Override
@@ -150,12 +158,13 @@ public class Obstacle implements Drawable {
         return obstacleType;
     }
 
-    public void changeSide() throws XPathExpressionException {
+    public void changeSide() throws XPathExpressionException, UnsupportedAudioFileException, IOException, LineUnavailableException {
         if (System.currentTimeMillis() - lastChangeSide > configuration.getInteger("config/game/obstacle/changesidelimit")) {
             for (int i = 0; i < polygon.npoints; i++) {
                 polygon.xpoints[i] = configuration.getInteger("config/settings/window/size/width") - polygon.xpoints[i];
             }
             lastChangeSide = System.currentTimeMillis();
+            new SoundClip(getClass().getResource("/resources/breeze.wav")).play();
         }
     }
 }

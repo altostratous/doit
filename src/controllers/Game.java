@@ -3,10 +3,13 @@ package controllers;
 import models.ObstacleType;
 import models.State;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import javax.xml.xpath.XPathExpressionException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 /**
  * Created by HP PC on 5/19/2016.
@@ -17,11 +20,11 @@ public class Game {
     Configuration configuration;
     Timer timer;
 
-    public Game(State state, Configuration configuration) {
+    public Game(State state, Configuration configuration) throws XPathExpressionException {
         this.state = state;
         this.configuration = configuration;
         state.setTime(System.currentTimeMillis());
-        timer = new Timer(15, new ActionListener() {
+        timer = new Timer(configuration.getInteger("config/settings/quality/framedelay"), new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 gamePage.repaint();
@@ -43,7 +46,7 @@ public class Game {
         timer.stop();
     }
 
-    public State update() throws XPathExpressionException {
+    public State update() throws XPathExpressionException, UnsupportedAudioFileException, IOException, LineUnavailableException {
         long dt = System.currentTimeMillis() - state.getTime();
         if (state.getObstacle().isAlive())
         {
@@ -54,9 +57,12 @@ public class Game {
                 {
                     state.getObstacle().changeSide();
                 }
+                new SoundClip(getClass().getResource("/resources/handle.wav")).play();
+
             }
             if (hitTest())
             {
+                new SoundClip(getClass().getResource("/resources/collision.wav")).play();
                 onGameOver(state);
             }
         }
@@ -71,11 +77,17 @@ public class Game {
         return state;
     }
 
-    public void turnLeft() {
+    public void turnLeft() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        if (state.getAngularVelocity() != -1)
+            new SoundClip(getClass().getResource("/resources/steer.wav")).play();
+
         state.setAngularVelocity(-1);
     }
 
-    public void turnRight() {
+    public void turnRight() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        if (state.getAngularVelocity() != 1)
+            new SoundClip(getClass().getResource("/resources/steer.wav")).play();
+
         state.setAngularVelocity(1);
     }
 

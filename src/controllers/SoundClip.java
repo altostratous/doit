@@ -29,7 +29,9 @@ public class SoundClip {
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
         sourceLine = (SourceDataLine) AudioSystem.getLine(info);
         sourceLine.open(audioFormat);
-
+        FloatControl gainControl = (FloatControl) sourceLine
+                .getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(6);
         playThread = new Thread(){
             @Override
             public void run() {
