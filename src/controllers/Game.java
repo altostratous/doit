@@ -115,4 +115,8 @@ public class Game {
         state.setTime(System.currentTimeMillis());
         timer.start();
     }
+
+    public State getState() {
+        return state;
+    }
 }

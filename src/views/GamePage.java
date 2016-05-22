@@ -46,6 +46,22 @@ public class GamePage extends JPanel {
 
                                     if (e.getKeyCode() == KeyEvent.VK_RIGHT)
                                         game.turnRight();
+
+                                    if (e.getKeyCode() == KeyEvent.VK_SPACE)
+                                    {
+//                                        if (pause.getText().equals("Pause"))
+//                                        {
+//                                            game.pause();
+//                                            pause.setText("Resume");
+//                                        }
+//                                        else
+//                                        {
+//                                            game.resume();
+//                                            GamePage.this.requestFocus();
+//                                            pause.setText("Pause");
+//                                        }
+                                        pausing();
+                                    }
                                 }
 
                                 @Override
@@ -61,21 +77,45 @@ public class GamePage extends JPanel {
         pause.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (pause.getText().equals("Pause"))
-                {
-                    game.pause();
-                    pause.setText("Resume");
-                }
-                else
-                {
-                    game.resume();
-                    GamePage.this.requestFocus();
-                    pause.setText("Pause");
-                }
+//                if (pause.getText().equals("Pause"))
+//                {
+//                    game.pause();
+//                    pause.setText("Resume");
+//                }
+//                else
+//                {
+//                    game.resume();
+//                    GamePage.this.requestFocus();
+//                    pause.setText("Pause");
+//                }
+                pausing();
             }
         });
         add(pause);
     }
+
+    private void pausing() {
+        game.pause();
+        PauseWindow pauseWindow = new PauseWindow(){
+            public void onResume()
+            {
+                super.onResume();
+                game.resume();
+                requestFocus();
+            }
+            public void onSound()
+            {
+                super.onSound();
+            }
+            public void onBack()
+            {
+                super.onBack();
+                game.onGameOver(game.getState());
+            }
+        };
+        pauseWindow.setVisible(true);
+    }
+
     @Override
     public void paint(Graphics graphics)
     {
