@@ -47,6 +47,7 @@ public class Game {
     }
 
     public State update() throws XPathExpressionException, UnsupportedAudioFileException, IOException, LineUnavailableException {
+        state.addSpeed(configuration.getDouble("config/game/gettinghardrate"));
         long dt = System.currentTimeMillis() - state.getTime();
         if (state.getObstacle().isAlive())
         {
@@ -71,7 +72,7 @@ public class Game {
             state.generateObstacle();
         }
         // rotate the piece
-        state.getPiece().rotate(state.getAngularVelocity() * configuration.getDouble("config/game/piece/speed") * state.getSpeedCoefficient());
+        state.getPiece().rotate(dt * state.getAngularVelocity() * configuration.getDouble("config/game/piece/speed") * state.getSpeedCoefficient());
         // // TODO: 5/20/2016 update state and keep the time
         state.addTime(dt);
         return state;

@@ -43,7 +43,7 @@ public class State implements Drawable{
         this.score = 0;
         piece = new Piece(configuration);
         obstacle = new Obstacle(configuration, this);
-        speedCoefficient = 1;
+        speedCoefficient = 0.7;
         initTime = System.currentTimeMillis();
     }
 
@@ -80,5 +80,10 @@ public class State implements Drawable{
 
     public void setTime(long time) {
         this.time = time;
+    }
+
+    public void addSpeed(double ds) {
+        speedCoefficient += ds;
+
     }
 }

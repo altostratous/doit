@@ -22,7 +22,7 @@
             <x>140</x>
             <y>380</y>
             <subradius>15</subradius>
-            <speed>0.05</speed>
+            <speed>0.005</speed>
         </piece>
         <obstacle>
             <changesidelimit>500</changesidelimit>
@@ -31,7 +31,8 @@
             <width>200</width>
             <lesscoefficient>0.7</lesscoefficient>
             <morecoefficient>1.05</morecoefficient>
-            <speed>0.2</speed>
+            <speed>0.25</speed>
         </obstacle>
+        <gettinghardrate>0.0001</gettinghardrate>
     </game>
 </config>

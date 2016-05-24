@@ -30,11 +30,13 @@ public class GamePage extends JPanel {
     private Configuration configuration;
     private Game game;
     private JButton pause;
+    private Image image;
     private MainWindow mainWindow;
     public GamePage(Configuration configuration, Game game, MainWindow mainWindow) throws XPathExpressionException {
         this.mainWindow = mainWindow;
         this.game = game;
         setFocusable(true);
+        image = new ImageIcon(getClass().getResource("/resources/background.gif")).getImage();
         this.configuration = configuration;
         this.addKeyListener(new KeyListener() {
                                 @Override
@@ -134,9 +136,10 @@ public class GamePage extends JPanel {
         Graphics2D graphics2D = (Graphics2D) graphics;
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         try {
-            graphics2D.setColor(Color.BLACK);
-            graphics2D.fillRect(0, 0, configuration.getInteger("/config/settings/window/size/width"),
-                    configuration.getInteger("/config/settings/window/size/height"));
+            graphics2D.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+//            graphics2D.setColor(Color.BLACK);
+//            graphics2D.fillRect(0, 0, configuration.getInteger("/config/settings/window/size/width"),
+//                    configuration.getInteger("/config/settings/window/size/height"));
             game.update().draw(graphics2D);
         } catch (Exception e) {
             ErrorWindow.viewError(e);
