@@ -28,7 +28,7 @@ public class Obstacle implements Drawable {
         this.state = state;
         this.configuration = configuration;
         polygon = createPolygon(obstacleType);
-        if (obstacleType == ObstacleType.ROTATING_ABSTACLE )
+        if (obstacleType == ObstacleType.ROTATING_OBSTACLE || obstacleType == ObstacleType.ROTATING_POSITION_OBSTACLE || obstacleType == ObstacleType.ROTATING_SIDE_OBSTACLE)
             angularVelocity = configuration.getDouble("config/game/obstacle/angularvelocity");
 
     }
@@ -38,20 +38,22 @@ public class Obstacle implements Drawable {
         Random random = new Random(System.currentTimeMillis());
         switch (obstacleType)
         {
-            case ROTATING_ABSTACLE:
+            case ROTATING_OBSTACLE:
                 rectangle = new Rectangle((int) (configuration.getInteger("config/game/obstacle/width")), configuration.getInteger("config/game/obstacle/height"));
                 rectangle.setLocation((int) (configuration.getInteger("config/settings/window/size/width") / 2 - rectangle.getWidth() / 2),
                             (int) - rectangle.getHeight());
                 break;
-            case POSITION_ABSTACLE:
+            case ROTATING_POSITION_OBSTACLE:
+            case POSITION_OBSTACLE:
                 rectangle = new Rectangle((int) ((configuration.getInteger("config/game/piece/radius") - configuration.getInteger("config/game/piece/subradius")) * 2 *
                     configuration.getDouble("config/game/obstacle/lesscoefficient")), configuration.getInteger("config/game/obstacle/height"));
 
                 int left = random.nextInt(configuration.getInteger("config/settings/window/size/width") - configuration.getInteger("config/game/obstacle/width"));
                 rectangle.setLocation(left, (int) -rectangle.getHeight());
                 break;
-            case BLINKING_SIDE_ABSTACLE:
-            case SIDE_ABSTACLE:
+            case BLINKING_SIDE_OBSTACLE:
+            case ROTATING_SIDE_OBSTACLE:
+            case SIDE_OBSTACLE:
                 rectangle = new Rectangle((int) (configuration.getInteger("config/settings/window/size/width") / 2 *
                         configuration.getDouble("config/game/obstacle/morecoefficient")), configuration.getInteger("config/game/obstacle/height"));
                 if (random.nextBoolean()) {
@@ -63,6 +65,18 @@ public class Obstacle implements Drawable {
                             (int) - rectangle.getHeight());
                 }
                 break;
+        }
+        if (obstacleType == ObstacleType.ROTATING_SIDE_OBSTACLE)
+        {
+            rectangle.setSize((int)(configuration.getInteger("config/settings/window/size/width") / 2  * configuration.getDouble("config/game/obstacle/lesscoefficient")),(int)rectangle.getHeight());
+            if (random.nextBoolean()) {
+                rectangle.setLocation(0, (int) -rectangle.getHeight());
+            }
+            else
+            {
+                rectangle.setLocation((int) (configuration.getInteger("config/settings/window/size/width") - rectangle.getWidth()),
+                        (int) - rectangle.getHeight());
+            }
         }
         return createPolygon(rectangle);
     }
@@ -79,18 +93,22 @@ public class Obstacle implements Drawable {
 
     private ObstacleType randomType() {
         Random random = new Random(System.currentTimeMillis());
-        int typeId = random.nextInt() % 4;
+        int typeId = random.nextInt() % 6;
         typeId = Math.abs(typeId);
         switch (typeId)
         {
             case 0:
-                return ObstacleType.BLINKING_SIDE_ABSTACLE;
+                return ObstacleType.BLINKING_SIDE_OBSTACLE;
             case 1:
-                return ObstacleType.POSITION_ABSTACLE;
+                return ObstacleType.POSITION_OBSTACLE;
             case 2:
-                return ObstacleType.ROTATING_ABSTACLE;
+                return ObstacleType.ROTATING_OBSTACLE;
             case 3:
-                return ObstacleType.SIDE_ABSTACLE;
+                return ObstacleType.SIDE_OBSTACLE;
+            case 4:
+                return ObstacleType.ROTATING_POSITION_OBSTACLE;
+            case 5:
+                return ObstacleType.ROTATING_SIDE_OBSTACLE;
         }
         return null;
     }
@@ -99,7 +117,7 @@ public class Obstacle implements Drawable {
     public void draw(Graphics2D graphics2D, Point location) {
         graphics2D.setColor(Color.WHITE);
         graphics2D.fillPolygon(polygon);
-        if (obstacleType == ObstacleType.BLINKING_SIDE_ABSTACLE) {
+        if (obstacleType == ObstacleType.BLINKING_SIDE_OBSTACLE) {
             graphics2D.setColor(Color.RED);
             graphics2D.drawPolygon(polygon);
         }

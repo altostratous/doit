@@ -54,7 +54,7 @@ public class Game {
             state.getObstacle().update(dt);
             if (approachTest())
             {
-                if (state.getObstacle().getType() == ObstacleType.BLINKING_SIDE_ABSTACLE)
+                if (state.getObstacle().getType() == ObstacleType.BLINKING_SIDE_OBSTACLE)
                 {
                     state.getObstacle().changeSide();
                 }
