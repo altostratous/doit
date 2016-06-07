@@ -35,6 +35,7 @@ public class GamePage extends JPanel {
     public GamePage(Configuration configuration, Game game, MainWindow mainWindow) throws XPathExpressionException {
         this.mainWindow = mainWindow;
         this.game = game;
+        this.setLayout(null);
         setFocusable(true);
         image = new ImageIcon(getClass().getResource("/resources/background.gif")).getImage();
         this.configuration = configuration;
@@ -85,7 +86,17 @@ public class GamePage extends JPanel {
                                         game.stopTurningRight();
                                 }
                             });
-        pause = new JButton("Pause");
+        pause = new JButton("Pause"){
+            @Override
+            public void paint(Graphics graphics)
+            {
+                Graphics2D graphics2D = (Graphics2D) graphics;
+                graphics2D.setColor(Color.WHITE);
+                graphics2D.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+                graphics2D.setColor(Color.BLACK);
+                graphics2D.drawString("PAUSE", this.getX() + 21, this.getY() + 15);
+            }
+        };
         pause.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -103,6 +114,7 @@ public class GamePage extends JPanel {
                 pausing();
             }
         });
+        pause.setBounds(10, 10, 90, 30);
         add(pause);
     }
 
@@ -144,7 +156,8 @@ public class GamePage extends JPanel {
         } catch (Exception e) {
             ErrorWindow.viewError(e);
         }
-        graphics2D.drawString("Score: " + game.getScore(), 10, 20);
+        graphics2D.setColor(Color.WHITE);
+        graphics2D.drawString("Score: " + game.getScore(), 110, 35);
         paintComponents(graphics);
     }
 }

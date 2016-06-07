@@ -19,6 +19,7 @@ public class Game {
     JPanel gamePage;
     Configuration configuration;
     Timer timer;
+    private boolean isPaused = false;
 
     public Game(State state, Configuration configuration) throws XPathExpressionException {
         this.state = state;
@@ -43,10 +44,13 @@ public class Game {
 
     public void pause()
     {
+        isPaused = true;
         timer.stop();
     }
 
     public State update() throws XPathExpressionException, UnsupportedAudioFileException, IOException, LineUnavailableException {
+        if (isPaused)
+            return state;
         state.addSpeed(configuration.getDouble("config/game/gettinghardrate"));
         long dt = System.currentTimeMillis() - state.getTime();
         if (state.getObstacle().isAlive())
@@ -126,6 +130,7 @@ public class Game {
 
     public void resume() {
         state.setTime(System.currentTimeMillis());
+        isPaused = false;
         timer.start();
     }
 
