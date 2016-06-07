@@ -21,6 +21,7 @@ public class Obstacle implements Drawable {
     ObstacleType obstacleType;
     double angularVelocity;
     Configuration configuration;
+    Color color;
     State state;
     long lastChangeSide = 0;
     public Obstacle(Configuration configuration, State state) throws XPathExpressionException {
@@ -30,7 +31,30 @@ public class Obstacle implements Drawable {
         polygon = createPolygon(obstacleType);
         if (obstacleType == ObstacleType.ROTATING_OBSTACLE || obstacleType == ObstacleType.ROTATING_POSITION_OBSTACLE || obstacleType == ObstacleType.ROTATING_SIDE_OBSTACLE)
             angularVelocity = configuration.getDouble("config/game/obstacle/angularvelocity");
+        setColor();
+    }
 
+    private void setColor() {
+        switch (obstacleType) {
+            case ROTATING_OBSTACLE:
+                color = Color.decode("#ff556f");
+                break;
+            case ROTATING_POSITION_OBSTACLE:
+                color = Color.decode("#ffffff");
+                break;
+            case POSITION_OBSTACLE:
+                color = Color.decode("#Ef555f");
+                break;
+            case BLINKING_SIDE_OBSTACLE:
+                color = Color.decode("#5ff25f");
+                break;
+            case ROTATING_SIDE_OBSTACLE:
+                color = Color.decode("#a6f183");
+                break;
+            case SIDE_OBSTACLE:
+                color = Color.decode("#f68561");
+                break;
+        }
     }
 
     private Polygon createPolygon(ObstacleType obstacleType) throws XPathExpressionException {
@@ -115,12 +139,12 @@ public class Obstacle implements Drawable {
 
     @Override
     public void draw(Graphics2D graphics2D, Point location) {
-        graphics2D.setColor(Color.WHITE);
+        graphics2D.setColor(color);
         graphics2D.fillPolygon(polygon);
-        if (obstacleType == ObstacleType.BLINKING_SIDE_OBSTACLE) {
-            graphics2D.setColor(Color.RED);
-            graphics2D.drawPolygon(polygon);
-        }
+//        if (obstacleType == ObstacleType.BLINKING_SIDE_OBSTACLE) {
+//            graphics2D.setColor(Color.RED);
+//            graphics2D.drawPolygon(polygon);
+//        }
     }
 
     @Override

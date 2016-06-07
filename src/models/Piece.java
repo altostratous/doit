@@ -12,7 +12,7 @@ import java.awt.geom.Point2D;
  */
 public class Piece implements Drawable{
     private double x, y, radius, subradius, rotation;
-    private Color paint = Color.GRAY;
+    private Color paint = Color.WHITE;
     public Piece(Configuration configuration) throws XPathExpressionException {
         x = configuration.getDouble("config/game/piece/x");
         y = configuration.getDouble("config/game/piece/y");
@@ -27,9 +27,9 @@ public class Piece implements Drawable{
 //        graphics2D.drawOval((int)x + 1, (int)y + 1, (int)radius * 2 - 2, (int)radius * 2- 2);
         graphics2D.drawOval((int)x, (int)y, (int)radius * 2, (int)radius * 2);
 //        graphics2D.drawOval((int)x - 1, (int)y - 1, (int)radius * 2  + 2, (int)radius * 2+2);
-        graphics2D.setColor(Color.BLUE);
+        graphics2D.setColor(Color.decode("#2222ff"));
         graphics2D.fillOval(getFirstSubX(), getFirstSubY(), (int)subradius * 2, (int)subradius * 2);
-        graphics2D.setColor(Color.RED);
+        graphics2D.setColor(Color.decode("#ff2222"));
         graphics2D.fillOval(getSecondSubX(), getSecondSubY(), (int)subradius * 2, (int)subradius * 2);
     }
 
@@ -128,7 +128,7 @@ public class Piece implements Drawable{
         }
         else
         {
-            paint = Color.GRAY;
+            paint = Color.WHITE;
         }
         return test;
     }
